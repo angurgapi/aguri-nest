@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserDetails } from 'src/user/user-details.interface';
 import { AuthUserDto } from 'src/user/dto/auth-user.dto';
+// import { UserDocument } from 'src/user/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -37,12 +38,15 @@ export class AuthService {
     }
 
 
-    async login(existingUser: AuthUserDto): Promise<{token: string} | null> {
+    async login(existingUser: AuthUserDto): Promise<{token: string, user: UserDetails} | null> {
+        console.log('service triggered')
         const {email, password} = existingUser;
         const user = await this.validateUser(email, password);
+        console.log('service gets user', user)
         if(!user) return null;
         const jwt = await this.jwtService.signAsync({user});
-        return {token: jwt};
+        console.log(existingUser)
+        return {token: jwt, user: user};
     }
 
     

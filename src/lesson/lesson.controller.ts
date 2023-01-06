@@ -37,14 +37,14 @@ async getLessons(@Res() response) {
 try {
   const lessonList = await this.lessonService.getAllLessons();
   return response.status(HttpStatus.OK).json({
-  message: 'All lessons data found successfully',lessonList,});
+  message: 'All lessons data found successfully',lessonList});
  } catch (err) {
   return response.status(err.status).json(err.response);
  }
 }
 
 @Get('/:id')
-async getWord(@Res() response, @Param('id') lessonId: string) {
+async getLesson(@Res() response, @Param('id') lessonId: string) {
  try {
     const existingLesson = await
 this.lessonService.getLesson(lessonId);

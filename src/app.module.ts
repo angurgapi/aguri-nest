@@ -6,6 +6,7 @@ import { WordModule } from './word/word.module';
 import {LessonModule} from './lesson/lesson.module'; 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { LetterModule } from './letter/letter.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AuthModule,
     WordModule,
-    LessonModule
+    LessonModule,
+    LetterModule
   ],
   controllers: [AppController],
   providers: [AppService]

@@ -10,14 +10,12 @@ export class AuthController {
 
     @Post('register')
     register(@Body() user: CreateUserDto): Promise<UserDetails | null> {
-        console.log('user in controller: ', user)
         return this.authService.register(user);
     }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
     login(@Body() user: AuthUserDto): Promise<{token: string} | null> {
-        console.log('user in controller: ', user)
         return this.authService.login(user);
     }
 }

@@ -12,7 +12,8 @@ export class UserService {
         return {
             id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role: user.role || null
         }
     }
 
@@ -29,7 +30,7 @@ export class UserService {
     async create(name: string, email: string, hashedPassword: string):
     Promise<UserDocument> {
         const newUser = new this.userModel({
-            name, email, password: hashedPassword,
+            name, email, password: hashedPassword, role: 'user'
         });
         return newUser.save()
     }
