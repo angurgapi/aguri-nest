@@ -2,6 +2,7 @@ import { Type } from "@nestjs/common";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { Document, PopulatedDoc, SchemaTypes, Types } from "mongoose";
 import { Letter } from 'src/letter/letter.schema'
+import {Word} from 'src/word/word.schema'
 
 @Schema()
 export class Lesson extends Document{
@@ -11,8 +12,8 @@ export class Lesson extends Document{
    order_num: number;
    @Prop({type: [{type:  Types.ObjectId, ref: 'Letter'}]})
    letters: Letter[];
-   // @Prop()
-   // letters: [{type:  Types.ObjectId, ref: 'Letter'}];
+   @Prop({type: [{type:  Types.ObjectId, ref: 'Word'}]})
+   words: Word[];
 }
 
 

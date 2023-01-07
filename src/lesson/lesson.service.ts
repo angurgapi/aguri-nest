@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { Lesson } from 'src/lesson/lesson.schema';
 import { CreateLessonDto } from './dto/create-lesson.dto';
+import { GetFilteredLessonsDto } from './dto/get-filtered-lessons.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 // import { Letter } from 'src/letter/letter.schema';
 
@@ -33,13 +34,31 @@ export class LessonService {
         return lessonList;
     }
     
+    async getFilteredLessons(filterDto: GetFilteredLessonsDto): Promise<Lesson[] | any> {
+        const search = filterDto
+        console.log(search)
+        const lessonList = await this.lessonModel.find(search).populate('letters').populate('words');
+        if(!lessonList || lessonList.length === 0) {
+            throw new NotFoundException('No lessons found')
+        }
+        return lessonList
+    }
+
     async getLesson(lessonId: string): Promise<Lesson> {
-        const existingLesson = await this.lessonModel.findById(lessonId).populate({path: 'letters'});
+        const existingLesson = await (await this.lessonModel.findById(lessonId).populate({path: 'letters'})).populate('words');
         if(!existingLesson) {
             throw new NotFoundException(`Lesson with id #${lessonId} not found!`);
         }
         return existingLesson;
     }
+
+    // async getLessonByNumber(lessonNum: number): Promise<Lesson> {
+    //     const existingLesson = await this.lessonModel.findById({order_num: lessonNum}).populate({path: 'letters'}).populate('words');
+    //     if(!existingLesson) {
+    //         throw new NotFoundException(`Lesson with order_num #${lessonNum} not found!`);
+    //     }
+    //     return existingLesson;
+    // }
 
     async deleteLesson(lessonId: string): Promise<Lesson>{
         const deletedLesson = await this.lessonModel.findByIdAndDelete(lessonId);
