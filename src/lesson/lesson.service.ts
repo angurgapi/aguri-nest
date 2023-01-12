@@ -36,7 +36,7 @@ export class LessonService {
     
     async getFilteredLessons(filterDto: GetFilteredLessonsDto): Promise<Lesson[] | any> {
         const search = filterDto
-        console.log(search)
+        // console.log(search)
         const lessonList = await this.lessonModel.find(search).populate('letters').populate('words');
         if(!lessonList || lessonList.length === 0) {
             throw new NotFoundException('No lessons found')

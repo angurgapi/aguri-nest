@@ -11,7 +11,6 @@ import { AuthUserDto } from 'src/user/dto/auth-user.dto';
 export class AuthService {
     constructor(private userService: UserService, private jwtService: JwtService) {}
     async hashPassword(password: string): Promise<string> {
-        console.log('this was the password ', password)
         return bcrypt.hash(password, 12);
     }
 
@@ -39,13 +38,10 @@ export class AuthService {
 
 
     async login(existingUser: AuthUserDto): Promise<{token: string, user: UserDetails} | null> {
-        console.log('service triggered')
         const {email, password} = existingUser;
         const user = await this.validateUser(email, password);
-        console.log('service gets user', user)
         if(!user) return null;
         const jwt = await this.jwtService.signAsync({user});
-        console.log(existingUser)
         return {token: jwt, user: user};
     }
 
