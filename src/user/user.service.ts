@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument } from './user.schema';
 import { Model } from 'mongoose';
 import { UserDetails } from './user-details.interface';
+import { UpdateUserDto } from './dto/update-user-dto';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,8 @@ export class UserService {
             id: user._id,
             name: user.name,
             email: user.email,
-            role: user.role || null
+            role: user.role || null,
+            completedLessons: user.completedLessons || []
         }
     }
 
@@ -22,7 +24,7 @@ export class UserService {
     }
 
     async findById(id: string): Promise<UserDetails | null> {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id);
         if(!user) return null;
         return this._getUserDetails(user);
     }
@@ -34,4 +36,24 @@ export class UserService {
         });
         return newUser.save()
     }
-}
+
+    async updateUser(id: string, updateUserDto: UpdateUserDto):
+    Promise<UserDocument> {
+        const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true});
+        if(!user) {
+            throw new NotFoundException(`User #${id} not found!`);
+        }
+        return user
+    }
+
+    async addCompletedLesson(id: string, lessonNum: number): 
+    Promise<UserDocument> {
+        const user = await this.userModel.findById(id)
+        if(!user) {
+            throw new NotFoundException(`User #${id} not found!`);
+        }
+        user.completedLessons.push(lessonNum)
+        user.save()
+        return user
+    }
+ }
