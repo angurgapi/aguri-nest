@@ -41,10 +41,10 @@ export class LessonController {
   }
 
   @Get('/:id')
+  //not actual _id but order_num!!!
   async getLesson(@Res() response, @Param('id') lessonId: string) {
     try {
       const existingLesson = await this.lessonService.getLesson(lessonId);
-      console.log('trying to get lesson by id');
       return response.status(HttpStatus.OK).json(existingLesson);
     } catch (err) {
       return response.status(err.status).json(err.response);

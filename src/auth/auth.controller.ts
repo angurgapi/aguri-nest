@@ -33,26 +33,35 @@ export class AuthController {
     return this.authService.register(user, locale);
   }
 
+  //   @Post('login')
+  //   // @HttpCode(HttpStatus.OK)
+  //   login(
+  //     @Body() user: AuthUserDto,
+  //     @Req() request: Request,
+  //   ): Promise<{ token: string } | null> {
+  //     const locale = request.cookies.locale || 'en';
+  //     const userData = this.authService.login(user, locale);
+  //     if (!userData) {
+  //       throw new UnauthorizedException();
+  //     }
+  //     return userData;
+  //   }
   @Post('login')
-  // @HttpCode(HttpStatus.OK)
   login(
     @Body() user: AuthUserDto,
     @Req() request: Request,
   ): Promise<{ token: string } | null> {
     const locale = request.cookies.locale || 'en';
-    const userData = this.authService.login(user, locale);
-    if (!userData) {
-      throw new UnauthorizedException();
-    }
-    return userData;
+    const authData = this.authService.login(user, locale);
+    return authData;
   }
 
   //return user data from a profile request
-  @UseGuards(JwtGuard)
-  @Get('profile')
-  async user(@Req() request: Request) {
-    const id = await this.authService.userId(request);
-    const userProfileData = this.userService.findById(id);
-    return { user: userProfileData };
-  }
+  //   @UseGuards(JwtGuard)
+  //   @Get('profile')
+  //   async user(@Req() request: Request) {
+  //     const id = await this.authService.userId(request);
+  //     const userProfileData = this.userService.findById(id);
+  //     return { user: userProfileData };
+  //   }
 }

@@ -56,22 +56,26 @@ export class AuthService {
     return this.userService._getUserDetails(user);
   }
 
+  //   async login(
+  //     existingUser: AuthUserDto,
+  //     locale: string,
+  //   ): Promise<{ token: string; user: UserDetails } | null> {
+  //     const { email, password } = existingUser;
+  //     const user = await this.validateUser(email, password, locale);
+  //     if (!user)
+  //       throw new NotAcceptableException(locales[locale]['auth.wrongPassword']);
+  //     const jwt = await this.jwtService.signAsync({ user });
+  //     return { token: jwt, user: user };
+  //   }
   async login(
     existingUser: AuthUserDto,
     locale: string,
-  ): Promise<{ token: string; user: UserDetails } | null> {
+  ): Promise<{ token: string }> {
     const { email, password } = existingUser;
     const user = await this.validateUser(email, password, locale);
     if (!user)
       throw new NotAcceptableException(locales[locale]['auth.wrongPassword']);
     const jwt = await this.jwtService.signAsync({ user });
-    return { token: jwt, user: user };
-  }
-
-  //get user id from jwt token in request headers
-  async userId(request: Request): Promise<string> {
-    const cookie = request.headers.authorization.split(' ')[1];
-    const data = await this.jwtService.verifyAsync(cookie);
-    return data.user['id'];
+    return { token: jwt };
   }
 }

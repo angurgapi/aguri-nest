@@ -57,38 +57,17 @@ export class LessonService {
   }
 
   async getLesson(lessonId: string): Promise<Lesson> {
-    // const existingLesson = await (await this.lessonModel.findById(lessonId))
-    //   .populate({ path: 'letters' })
-    //   ).populate('words');
-    // console.log(existingLesson);
-    // if (!existingLesson) {
-    //   throw new NotFoundException(`Lesson with id #${lessonId} not found!`);
-    // }
-    // return existingLesson;
     try {
       const existingLesson = await this.lessonModel
-        .findById(lessonId)
+        .findOne({ order_num: lessonId })
         .populate({ path: 'letters' })
         .populate('words');
 
-      if (!existingLesson) {
-        throw new NotFoundException(`Lesson with id #${lessonId} not found!`);
-      }
-
       return existingLesson;
     } catch (error) {
-      // Handle the error and return a valid error response
-      throw new NotFoundException('Failed to fetch lesson with letters');
+      throw new NotFoundException(`Lesson with id ${lessonId} not found!`);
     }
   }
-
-  // async getLessonByNumber(lessonNum: number): Promise<Lesson> {
-  //     const existingLesson = await this.lessonModel.findById({order_num: lessonNum}).populate({path: 'letters'}).populate('words');
-  //     if(!existingLesson) {
-  //         throw new NotFoundException(`Lesson with order_num #${lessonNum} not found!`);
-  //     }
-  //     return existingLesson;
-  // }
 
   async deleteLesson(lessonId: string): Promise<Lesson> {
     const deletedLesson = await this.lessonModel.findByIdAndDelete(lessonId);
